@@ -1,0 +1,9 @@
+streamlit
+tensorflow
+pillow
+numpy
+fpdf2==2.8.4
+opencv-python-headless
+matplotlib
+pydicom>=2.3.0
+
