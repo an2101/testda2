@@ -99,11 +99,8 @@ class LungUNet(nn.Module):
         return self.final(x)
 
 # ================= LOAD MODEL =================
-@st.cache_resource
 
-
-
-MODEL_DIR = "/tmp/model"   # 🔥 dùng /tmp cho cloud (an toàn)
+MODEL_DIR = "/tmp/model"
 
 def download_model(file_id, output):
     if not os.path.exists(output):
@@ -114,18 +111,15 @@ def download_model(file_id, output):
 def load_models():
     os.makedirs(MODEL_DIR, exist_ok=True)
 
-    # 🔥 THAY ID thật của bạn vào đây
     UNET_ID = "1KoBmhwFMZJV6GVpabjgcY2aFGU-kcm03"
     MOBILENET_ID = "1g_DYDpEqnpzfCa3UIAE0ifJHVAHZyIjW"
 
     unet_path = os.path.join(MODEL_DIR, "lung_unet.pth")
     mobile_path = os.path.join(MODEL_DIR, "mobilenet.pth")
 
-    # 🔥 download nếu chưa có
     download_model(UNET_ID, unet_path)
     download_model(MOBILENET_ID, mobile_path)
 
-    # load model
     lung_unet = LungUNet().to(DEVICE)
     mobilenet = MobileNetV2Classifier(CFG["dropout_rate"]).to(DEVICE)
 
