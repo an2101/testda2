@@ -98,17 +98,45 @@ class LungUNet(nn.Module):
 
 # ================= LOAD MODEL =================
 @st.cache_resource
+
+import gdown
+import os
+
+MODEL_DIR = "/tmp/model"   # 🔥 dùng /tmp cho cloud (an toàn)
+
+def download_model(file_id, output):
+    if not os.path.exists(output):
+        url = f"https://drive.google.com/uc?id={file_id}"
+        gdown.download(url, output, quiet=False)
+
+@st.cache_resource
 def load_models():
+    os.makedirs(MODEL_DIR, exist_ok=True)
+
+    # 🔥 THAY ID thật của bạn vào đây
+    UNET_ID = "1KoBmhwFMZJV6GVpabjgcY2aFGU-kcm03"
+    MOBILENET_ID = "1g_DYDpEqnpzfCa3UIAE0ifJHVAHZyIjW"
+
+    unet_path = os.path.join(MODEL_DIR, "lung_unet.pth")
+    mobile_path = os.path.join(MODEL_DIR, "mobilenet.pth")
+
+    # 🔥 download nếu chưa có
+    download_model(UNET_ID, unet_path)
+    download_model(MOBILENET_ID, mobile_path)
+
+    # load model
     lung_unet = LungUNet().to(DEVICE)
     mobilenet = MobileNetV2Classifier(CFG["dropout_rate"]).to(DEVICE)
 
-    lung_unet.load_state_dict(torch.load("Model/lung_unet_best.pth", map_location=DEVICE))
-    mobilenet.load_state_dict(torch.load("Model/mobile_t1_best.pth", map_location=DEVICE))
+    lung_unet.load_state_dict(torch.load(unet_path, map_location=DEVICE))
+    mobilenet.load_state_dict(torch.load(mobile_path, map_location=DEVICE))
 
     lung_unet.eval()
     mobilenet.eval()
 
     return lung_unet, mobilenet
+
+
 
 lung_unet, mobilenet = load_models()
 
