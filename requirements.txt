@@ -5,4 +5,3 @@ albumentations
 opencv-python-headless
 numpy
 gdown
-os
