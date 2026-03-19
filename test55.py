@@ -5,6 +5,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import albumentations as A
+import gdown
+import os
 from albumentations.pytorch import ToTensorV2
 from torchvision.models import mobilenet_v2, MobileNet_V2_Weights
 
@@ -99,8 +101,7 @@ class LungUNet(nn.Module):
 # ================= LOAD MODEL =================
 @st.cache_resource
 
-import gdown
-import os
+
 
 MODEL_DIR = "/tmp/model"   # 🔥 dùng /tmp cho cloud (an toàn)
 
